@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slideshow</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        #slideshow img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="slideshow"></div>
+
+    <script>
+        var images = [
+            // Add the URLs of your images from your GitHub repository here
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/Save%20the%20date%20OS.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/Uniliga%20Talent%20Programm%20Pausengrafik.jpg",
+        ];
+
+        var duration = 15000; // Time in milliseconds for each image
+
+        var slideshow = document.getElementById('slideshow');
+        var currentIndex = 0;
+
+        function changeImage() {
+            slideshow.style.opacity = 0;
+            setTimeout(function() {
+                slideshow.innerHTML = '<img src="' + images[currentIndex] + '">';
+                slideshow.style.opacity = 1;
+                currentIndex = (currentIndex + 1) % images.length;
+            }, 1000); // Time in milliseconds for fade transition
+            setTimeout(changeImage, duration);
+        }
+
+        changeImage();
+    </script>
+</body>
+</html>
