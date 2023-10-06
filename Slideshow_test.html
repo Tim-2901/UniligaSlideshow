@@ -62,28 +62,37 @@
             };
             img.src = url;
         }
-        
         function loadNextImage() {
-            preloadImage(images[currentIndex], function(isValid) {
-                if (isValid) {
-                    var imageContainer = document.createElement("div");
-                    imageContainer.classList.add("image-container");
-                    slideshowElement.appendChild(imageContainer);
-                    
-                    var imageElement = document.createElement("img");
-                    imageElement.src = images[currentIndex];
-                    imageContainer.appendChild(imageElement);
-                    
-                    setTimeout(function() {
-                        imageContainer.classList.add("active");
-                    }, 100);
-                }
-                
-                currentIndex = (currentIndex + 1) % images.length;
-                setTimeout(loadNextImage, duration);
-            });
+    preloadImage(images[currentIndex], function(isValid) {
+        if (isValid) {
+            var imageContainer = document.createElement("div");
+            imageContainer.classList.add("image-container");
+            slideshowElement.appendChild(imageContainer);
+
+            var imageElement = document.createElement("img");
+            imageElement.src = images[currentIndex];
+            imageContainer.appendChild(imageElement);
+
+            setTimeout(function() {
+                imageContainer.classList.add("active");
+            }, 100);
+            
+            // Move to the next image after the specified duration
+            setTimeout(function() {
+                imageContainer.classList.remove("active");
+                setTimeout(function() {
+                    imageContainer.remove();
+                    currentIndex = (currentIndex + 1) % images.length;
+                    loadNextImage();
+                }, 1000); // 1 second for the fade-out effect
+            }, duration);
+        } else {
+            // If the image is invalid, smoothly fade to the next valid image
+            currentIndex = (currentIndex + 1) % images.length;
+            loadNextImage();
         }
-        
+    });
+}
         loadNextImage();
     </script>
 </body>

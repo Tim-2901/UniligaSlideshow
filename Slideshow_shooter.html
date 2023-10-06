@@ -34,32 +34,63 @@
 
     <script>
         var images = [
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/1.jpg",
             "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/2.jpg",
             "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/3.jpg",
-            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/4.jpg"
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/4.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/5.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/6.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/7.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/8.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/9.jpg",
+            "https://raw.githubusercontent.com/Smudi97/UniligaSlideshow/main/10.jpg"
         ];
         
-        var duration = 20000; //Zeit in milisekunden die jedes Bild da ist
+        var duration = 20000;
         var currentIndex = 0;
         var slideshowElement = document.getElementById("slideshow");
         
+        function preloadImage(url, callback) {
+            var img = new Image();
+            img.onload = function() {
+                callback(true);
+            };
+            img.onerror = function() {
+                callback(false);
+            };
+            img.src = url;
+        }
         function loadNextImage() {
+    preloadImage(images[currentIndex], function(isValid) {
+        if (isValid) {
             var imageContainer = document.createElement("div");
             imageContainer.classList.add("image-container");
             slideshowElement.appendChild(imageContainer);
-            
+
             var imageElement = document.createElement("img");
             imageElement.src = images[currentIndex];
             imageContainer.appendChild(imageElement);
-            
+
             setTimeout(function() {
                 imageContainer.classList.add("active");
             }, 100);
             
+            // Move to the next image after the specified duration
+            setTimeout(function() {
+                imageContainer.classList.remove("active");
+                setTimeout(function() {
+                    imageContainer.remove();
+                    currentIndex = (currentIndex + 1) % images.length;
+                    loadNextImage();
+                }, 1000); // 1 second for the fade-out effect
+            }, duration);
+        } else {
+            // If the image is invalid, smoothly fade to the next valid image
             currentIndex = (currentIndex + 1) % images.length;
-            setTimeout(loadNextImage, duration);
+            loadNextImage();
         }
-        
+    });
+}
         loadNextImage();
     </script>
 </body>
